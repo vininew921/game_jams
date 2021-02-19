@@ -1,6 +1,6 @@
-##No Name Project
+# Godot Game Jam 30 - Heartbeat
 
-#Ideas
+### Ideas
 
 - Change dimension on heartbeat - done
 - Add enemies
