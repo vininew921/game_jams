@@ -5,7 +5,7 @@ const _HeartBeatController = preload("res://Scenes/HeartBeatController.tscn")
 var velocity = Vector2.ZERO
 var direction = Vector2.RIGHT
 var heartBeat = null
-var can_switch = false
+var can_switch = true
 var hasSwitched = false
 
 onready var playerFollower = $PlayerFollower
