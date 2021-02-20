@@ -11,7 +11,8 @@ enum RYTHM{
 	Normal,
 	Slow
 }
-export var state = RYTHM.Slow setget set_rythm
+
+export var state = RYTHM.Normal setget set_rythm
 
 func _ready():
 	timer.start(state + 1)
