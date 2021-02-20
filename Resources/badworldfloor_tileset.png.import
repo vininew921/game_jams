@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dirt_floor2.png-ef8743fb9f6d43b5cd98da98fc61693c.stex"
+path="res://.import/badworldfloor_tileset.png-3a2dfba09a0e62d3f36cf9fc1b561ab5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/dirt_floor2.png"
-dest_files=[ "res://.import/dirt_floor2.png-ef8743fb9f6d43b5cd98da98fc61693c.stex" ]
+source_file="res://Resources/badworldfloor_tileset.png"
+dest_files=[ "res://.import/badworldfloor_tileset.png-3a2dfba09a0e62d3f36cf9fc1b561ab5.stex" ]
 
 [params]
 

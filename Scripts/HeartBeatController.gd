@@ -19,10 +19,9 @@ func _ready():
 
 func set_rythm(value):
 	state = value
-	pass
 
 func _on_Timer_timeout():
-	audio.play()
 	emit_signal("onHeartBeat")
+	audio.play()
 	timer.start(state + 1)
-	pass
+

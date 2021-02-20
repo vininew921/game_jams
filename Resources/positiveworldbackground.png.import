@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dirt_floor.png-c2970e690b8097e26451051e61726f9a.stex"
+path="res://.import/positiveworldbackground.png-dd5d60464fb2e569bb77e35ffaab459b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/dirt_floor.png"
-dest_files=[ "res://.import/dirt_floor.png-c2970e690b8097e26451051e61726f9a.stex" ]
+source_file="res://Resources/positiveworldbackground.png"
+dest_files=[ "res://.import/positiveworldbackground.png-dd5d60464fb2e569bb77e35ffaab459b.stex" ]
 
 [params]
 

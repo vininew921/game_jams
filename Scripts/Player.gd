@@ -1,10 +1,12 @@
 extends KinematicBody2D
 
+const _HeartBeatController = preload("res://Scenes/HeartBeatController.tscn")
+
 var velocity = Vector2.ZERO
 var direction = Vector2.RIGHT
-
-const _HeartBeatController = preload("res://Scenes/HeartBeatController.tscn")
-var heartBeat
+var heartBeat = null
+var can_switch = false
+var hasSwitched = false
 
 onready var playerFollower = $PlayerFollower
 onready var animation = $AnimationPlayer
@@ -13,12 +15,15 @@ onready var sprite = $Sprite
 export var MAX_SPEED = 50
 export var GRAVITY = 10
 export var JUMP_HEIGHT = 100
+export var ACCELERATION = 100
+export var TARGET_FPS = 60
 
 ###Enums
 enum STATE{
 	Idle,
 	Run,
-	Jump
+	Jump,
+	Dead
 }
 
 enum RYTHM{
@@ -34,55 +39,75 @@ func _ready():
 	add_child(heartBeat)
 	heartBeat.connect("onHeartBeat", self, "switch_worlds")
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	direction = get_direction()
-	velocity = get_velocity()
+	velocity = get_velocity(delta)
 	
 	velocity = move_and_slide(velocity, Vector2.UP)
-
-	
-	if velocity.x != 0:
-		state = STATE.Run
-	else:
-		state = STATE.Idle
 
 	set_animation()
 
 	if Input.is_action_just_pressed("switch_worlds"):
-		heartBeat.state = heartBeat.state - 1
-	if Input.is_action_just_pressed("reload"):
-		reload_game()
+		can_switch = !can_switch
+
 
 func get_direction():
-	var is_jumping = is_on_floor() && Input.is_action_just_pressed("jump")
-	var dir = Vector2(Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"), is_jumping).normalized()
+	var dir = Vector2(Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"), 0).normalized()
 	return dir
 
-func get_velocity():
+func get_velocity(delta):
 	var newVelocity = velocity
-	newVelocity.x = direction.x * MAX_SPEED
-	newVelocity.y += GRAVITY
-	if direction.y > 0:
-		newVelocity.y = JUMP_HEIGHT * -1
+
+	if direction.x != 0:
+		state = STATE.Run
+		newVelocity.x = direction.x * ACCELERATION
+		newVelocity.x = clamp(newVelocity.x, -MAX_SPEED, MAX_SPEED)
+	else:
+		state = STATE.Idle
+
+	newVelocity.y += GRAVITY * delta * TARGET_FPS
+
+	if is_on_floor():
+		if direction.x == 0:
+			newVelocity.x = 0
+			#newVelocity.x = lerp(newVelocity.x, 0, FRICTION * delta)
+		if Input.is_action_just_pressed("jump"):
+			newVelocity.y = -JUMP_HEIGHT
+	else:
+		state = STATE.Jump
+		if Input.is_action_just_released("jump") and newVelocity.y < -JUMP_HEIGHT/2:
+			newVelocity.y = -JUMP_HEIGHT/2
+		if direction.x == 0:
+			newVelocity.x = 0
+
 	return newVelocity
 
 func set_animation():
-	if state == STATE.Run:
-		if direction.x == Vector2.LEFT.x:
-			sprite.flip_h = true
-		else:
-			sprite.flip_h = false
-		animation.play("Running")
-	else:
-		animation.play("Idle")
+	match state:
+		STATE.Run:
+			animation.play("Running")
+
+		STATE.Idle:
+			animation.play("Idle")
+
+		STATE.Jump:
+			animation.play("Jump")
+		
+	if direction.x != 0:
+		sprite.flip_h = direction.x == Vector2.LEFT.x
 	pass
 
 func switch_worlds():
-	var oldPosition = self.position
-	self.position = playerFollower.global_position
-	playerFollower.global_position = oldPosition
+	if can_switch:
+		hasSwitched = true
+		var oldPosition = self.position
+		self.position = playerFollower.global_position
+		playerFollower.global_position = oldPosition
+	
+	if is_inside_wall():
+		queue_free()
 	pass
 
-func reload_game():
-	get_tree().reload_current_scene()
+func is_inside_wall():
+	return test_move(self.transform, Vector2.UP) && test_move(self.transform, Vector2.DOWN) && test_move(self.transform, Vector2.LEFT) && test_move(self.transform, Vector2.RIGHT)
 
