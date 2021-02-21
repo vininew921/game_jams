@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 const _HeartBeatController = preload("res://Scenes/HeartBeatController.tscn")
 
+signal on_death
+
 var velocity = Vector2.ZERO
 var direction = Vector2.RIGHT
 var heartBeat = null
@@ -11,6 +13,7 @@ var hasSwitched = false
 onready var playerFollower = $PlayerFollower
 onready var animation = $AnimationPlayer
 onready var sprite = $Sprite
+onready var jumpSound = $AudioSource
 
 export var MAX_SPEED = 50
 export var GRAVITY = 10
@@ -72,6 +75,7 @@ func get_velocity(delta):
 			newVelocity.x = 0
 			#newVelocity.x = lerp(newVelocity.x, 0, FRICTION * delta)
 		if Input.is_action_just_pressed("jump"):
+			jumpSound.play()
 			newVelocity.y = -JUMP_HEIGHT
 	else:
 		state = STATE.Jump
@@ -105,8 +109,12 @@ func switch_worlds():
 		playerFollower.global_position = oldPosition
 	
 	if is_inside_wall():
-		queue_free()
+		death()
 	pass
+
+func death():
+	emit_signal("on_death")
+	queue_free()
 
 func is_inside_wall():
 	return test_move(self.transform, Vector2.UP) && test_move(self.transform, Vector2.DOWN) && test_move(self.transform, Vector2.LEFT) && test_move(self.transform, Vector2.RIGHT)

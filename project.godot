@@ -16,8 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="GodotWildJam30"
-run/main_scene="res://Scenes/Level_1.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://Scenes/MainMenu.tscn"
+config/icon="res://Resources/head_bg_less.png"
+
+[autoload]
+
+GlobalController="*res://Scenes/GlobalController.tscn"
 
 [display]
 
