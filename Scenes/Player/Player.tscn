@@ -57,6 +57,7 @@ tracks/0/keys = {
 extents = Vector2( 7.3527, 13.647 )
 
 [node name="Player" type="KinematicBody2D"]
+collision_layer = 3
 script = ExtResource( 2 )
 MAX_SPEED = 100
 JUMP_HEIGHT = 180
@@ -65,7 +66,6 @@ JUMP_HEIGHT = 180
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 1 )
 hframes = 7
-frame = 6
 
 [node name="PlayerFollower" parent="." instance=ExtResource( 3 )]
 
@@ -84,3 +84,6 @@ shape = SubResource( 4 )
 [node name="AudioSource" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
 volume_db = -4.782
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
+[connection signal="timeout" from="InvincibilityTimer" to="." method="_on_InvincibilityTimer_timeout"]

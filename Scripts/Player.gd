@@ -9,17 +9,20 @@ var direction = Vector2.RIGHT
 var heartBeat = null
 var can_switch = true
 var hasSwitched = false
+var invincible = false
 
 onready var playerFollower = $PlayerFollower
 onready var animation = $AnimationPlayer
 onready var sprite = $Sprite
 onready var jumpSound = $AudioSource
+onready var timer = $InvincibilityTimer
 
 export var MAX_SPEED = 50
 export var GRAVITY = 10
 export var JUMP_HEIGHT = 100
 export var ACCELERATION = 100
 export var TARGET_FPS = 60
+export var HEALTH = 2
 
 ###Enums
 enum STATE{
@@ -38,6 +41,7 @@ enum RYTHM{
 var state = STATE.Idle
 
 func _ready():
+	GlobalController.connect("damage_player", self, "take_damage")
 	heartBeat = _HeartBeatController.instance()
 	add_child(heartBeat)
 	heartBeat.connect("onHeartBeat", self, "switch_worlds")
@@ -116,6 +120,19 @@ func death():
 	emit_signal("on_death")
 	queue_free()
 
+func take_damage():
+	if !invincible:
+		print("Took damage")
+		heartBeat.state = RYTHM.Fast
+		heartBeat.start_fast_timer()
+		HEALTH = HEALTH - 1
+		if HEALTH <= 0:
+			death()
+		invincible = true
+		timer.start(1)
+
 func is_inside_wall():
 	return test_move(self.transform, Vector2.UP) && test_move(self.transform, Vector2.DOWN) && test_move(self.transform, Vector2.LEFT) && test_move(self.transform, Vector2.RIGHT)
 
+func _on_InvincibilityTimer_timeout():
+	invincible = false
