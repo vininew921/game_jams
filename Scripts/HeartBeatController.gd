@@ -1,4 +1,3 @@
-#HeartBeat audio - all credits to InspectorJ at FreeSound -> https://freesound.org/people/InspectorJ/sounds/485076/
 extends Node
 
 onready var timer = $Timer
@@ -6,6 +5,7 @@ onready var fastTimer = $FastTimer
 onready var audio = $HeartBeat
 
 signal onHeartBeat
+signal onBackToNormal
 
 enum RYTHM{
 	Fast,
@@ -31,4 +31,5 @@ func _on_Timer_timeout():
 
 func _on_FastTimer_timeout():
 	state = RYTHM.Normal
+	emit_signal("onBackToNormal")
 

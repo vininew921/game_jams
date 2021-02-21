@@ -45,6 +45,7 @@ func _ready():
 	heartBeat = _HeartBeatController.instance()
 	add_child(heartBeat)
 	heartBeat.connect("onHeartBeat", self, "switch_worlds")
+	heartBeat.connect("onBackToNormal", self, "reset_health")
 
 func _physics_process(delta):
 	direction = get_direction()
@@ -130,6 +131,9 @@ func take_damage():
 			death()
 		invincible = true
 		timer.start(1)
+
+func reset_health():
+	HEALTH = 2
 
 func is_inside_wall():
 	return test_move(self.transform, Vector2.UP) && test_move(self.transform, Vector2.DOWN) && test_move(self.transform, Vector2.LEFT) && test_move(self.transform, Vector2.RIGHT)
