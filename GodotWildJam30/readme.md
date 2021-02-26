@@ -1,6 +1,6 @@
 # Alternate
 
-Itch.io page -> soon^tm
+Itch.io page -> https://happye.itch.io/alternate
 
 ## Godot Game Jam 30 - Heartbeat
 
@@ -12,7 +12,7 @@ GameJam -> <https://itch.io/jam/godot-wild-jam-30>
 - Add tutorial - done
 - Add menu - done
 - Add enemies - done
-- Create more levels - 6/10
+- Create more levels - 7/7 - done
 - Add animations - done
 - Add new tilemaps/sets - done
 
